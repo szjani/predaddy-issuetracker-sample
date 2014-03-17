@@ -1,0 +1,32 @@
+{% extends "layout.twig" %}
+{% block title %}
+    Issue list
+{% endblock %}
+{% block content %}
+<h3>Issues <a href="/create"><small class="glyphicon glyphicon-plus">Add</small></a></h3>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Assigned user</th>
+            <th>State</th>
+            <th>Last updated</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for issue in page %}
+            <tr>
+                <td>{{ issue.issueId }}</td>
+                <td>{{ issue.name }}</td>
+                <td>{{ issue.userName }}</td>
+                <td>{{ issue.state }}</td>
+                <td>{{ issue.lastUpdated|date("Y-m-d H:i:s") }}</td>
+                <td><a href="/reassign/{{ issue.issueId }}" class="btn btn-default btn-sm" role="button"><span class="glyphicon glyphicon-user"></span> Reassign</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

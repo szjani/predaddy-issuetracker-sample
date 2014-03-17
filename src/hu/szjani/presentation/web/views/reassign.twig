@@ -1,0 +1,14 @@
+{% extends "layout.twig" %}
+{% block title %}
+    Reassign issue
+{% endblock %}
+{% block content %}
+<form method="post" action="/reassign/{{ issue.issueId }}" enctype="application/x-www-form-urlencoded">
+    <div class="form-group">
+        <label for="user">User</label>
+        <input type="text" value="{{ issue.userName }}" class="form-control" name="user" id="user" placeholder="Enter user name">
+        <input type="hidden" name="version" value="{{ issue.version }}" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

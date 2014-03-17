@@ -1,0 +1,37 @@
+{
+    "name": "szjani/predaddy-issuetracker-sample",
+    "description": "Predaddy example",
+    "license": "MIT",
+    "keywords": ["ddd", "predaddy", "eventsourcing"],
+    "authors": [
+        {
+            "name": "Szurovecz János",
+            "homepage": "http://www.szjani.hu/"
+        }
+    ],
+    "bin": [
+        "bin/cli-config.php"
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "silex/silex": "v1.1.2",
+        "predaddy/predaddy": "~2.0",
+        "precore/precore": "~1.4",
+        "lf4php/lf4php": "~4.0",
+        "trf4php/trf4php-doctrine": "~1.2",
+        "lf4php/lf4php-log4php": "~2.0",
+        "jms/serializer": "~0.15",
+        "doctrine/dbal": "~2.4",
+        "beberlei/assert": "~2.0",
+        "twig/twig": "~1.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {"hu": "src/"}
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
