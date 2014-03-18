@@ -16,6 +16,7 @@ Installation
 2. Modify base.php: You can modify the configuration in this file. It uses MySQL and APC, you might have change them.
 3. Load the sql dump from `src/resources/mysql_init.sql`
 4. Modify log4php configuration file which can be found here `src/resources/log4php.xml`
+5. Document root in webserver must be the following: `src/hu/szjani/presentation/web/public`
 
 Screenshot
 ----------
