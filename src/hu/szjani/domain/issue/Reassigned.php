@@ -44,9 +44,9 @@ class Reassigned extends AbstractDomainEvent
      */
     private $newUserName;
 
-    public function __construct(AggregateId $aggregateId, $newUserName, $version)
+    public function __construct($newUserName)
     {
-        parent::__construct($aggregateId, $version);
+        parent::__construct();
         $this->newUserName = $newUserName;
     }
 

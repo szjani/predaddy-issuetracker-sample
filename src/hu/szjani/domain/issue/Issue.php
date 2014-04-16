@@ -31,7 +31,6 @@ use predaddy\messagehandling\annotation\Subscribe;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 
-
 /**
  * Class Issue
  *
@@ -82,8 +81,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
                 new UUIDAggregateId(UUID::randomUUID()),
                 $command->getName(),
                 $command->getAssignedUserName(),
-                State::$ASSIGNED->name(),
-                $command->getVersion()
+                State::$ASSIGNED->name()
             )
         );
     }
@@ -106,7 +104,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
             ->that($command->getNewUserName(), 'user name')->string()->notEmpty()
             ->that($this->state->equals(State::$CLOSED), 'current state')->false()
             ->verifyNow();
-        $this->apply(new Reassigned($this->getId(), $command->getNewUserName(), $command->getVersion()));
+        $this->apply(new Reassigned($command->getNewUserName()));
     }
 
     /**
