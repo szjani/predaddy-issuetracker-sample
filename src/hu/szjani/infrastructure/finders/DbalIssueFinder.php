@@ -34,14 +34,6 @@ use predaddy\presentation\PageImpl;
 class DbalIssueFinder extends AbstractPageableFinderDbalImpl implements IssueFinder
 {
     /**
-     * @param Connection $connection
-     */
-    public function __construct(Connection $connection)
-    {
-        parent::__construct($connection);
-    }
-
-    /**
      * @param Pageable $pageable
      * @return Page
      */
