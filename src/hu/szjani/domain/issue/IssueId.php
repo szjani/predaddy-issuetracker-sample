@@ -23,42 +23,22 @@
 
 namespace hu\szjani\domain\issue;
 
-use predaddy\commandhandling\AbstractDirectCommand;
+use predaddy\domain\UUIDAggregateId;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 
-class CreateIssue extends AbstractDirectCommand
+/**
+ * Class IssueId
+ *
+ * @package hu\szjani\domain\issue
+ *
+ * @author Szurovecz János <szjani@szjani.hu>
+ *
+ * @ExclusionPolicy("none")
+ */
+final class IssueId extends UUIDAggregateId
 {
-    private $name;
-    private $assignedUserName;
-
     /**
-     * @param string $name
-     * @param string $assignedUserName
-     */
-    public function __construct($name, $assignedUserName)
-    {
-        parent::__construct();
-        $this->name = $name;
-        $this->assignedUserName = $assignedUserName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAssignedUserName()
-    {
-        return $this->assignedUserName;
-    }
-
-    /**
-     * @return string
+     * @return string FQCN
      */
     public function aggregateClass()
     {

@@ -32,16 +32,16 @@ class IssueDto
     private $userName;
     private $state;
     private $lastUpdated;
-    private $version;
+    private $stateHash;
 
-    public function __construct($issueId, DateTime $lastUpdated, $name, $state, $userName, $version)
+    public function __construct($issueId, DateTime $lastUpdated, $name, $state, $userName, $stateHash)
     {
         $this->issueId = $issueId;
         $this->lastUpdated = $lastUpdated;
         $this->name = $name;
         $this->state = $state;
         $this->userName = $userName;
-        $this->version = $version;
+        $this->stateHash = $stateHash;
     }
 
     /**
@@ -87,8 +87,8 @@ class IssueDto
     /**
      * @return mixed
      */
-    public function getVersion()
+    public function getStateHash()
     {
-        return $this->version;
+        return $this->stateHash;
     }
 }

@@ -64,10 +64,10 @@ class Event extends \predaddy\domain\impl\doctrine\Event implements \Doctrine\OR
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'sequenceNumber', 'aggregateId', 'aggregateType', 'eventType', 'version', 'data', 'created');
+            return array('__isInitialized__', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'sequenceNumber', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'stateHash', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'aggregateId', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'aggregateType', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'eventType', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'data', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'created');
         }
 
-        return array('__isInitialized__', 'sequenceNumber', 'aggregateId', 'aggregateType', 'eventType', 'version', 'data', 'created');
+        return array('__isInitialized__', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'sequenceNumber', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'stateHash', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'aggregateId', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'aggregateType', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'eventType', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'data', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Event' . "\0" . 'created');
     }
 
     /**
@@ -198,17 +198,6 @@ class Event extends \predaddy\domain\impl\doctrine\Event implements \Doctrine\OR
     /**
      * {@inheritDoc}
      */
-    public function getVersion()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getVersion', array());
-
-        return parent::getVersion();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getCreated()
     {
 
@@ -263,6 +252,17 @@ class Event extends \predaddy\domain\impl\doctrine\Event implements \Doctrine\OR
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEventType', array());
 
         return parent::getEventType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function stateHash()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'stateHash', array());
+
+        return parent::stateHash();
     }
 
     /**

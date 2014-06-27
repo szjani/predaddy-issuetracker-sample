@@ -64,10 +64,10 @@ class Snapshot extends \predaddy\domain\impl\doctrine\Snapshot implements \Doctr
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'aggregateId', 'type', 'data', 'version');
+            return array('__isInitialized__', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'aggregateId', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'type', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'data', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'version');
         }
 
-        return array('__isInitialized__', 'aggregateId', 'type', 'data', 'version');
+        return array('__isInitialized__', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'aggregateId', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'type', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'data', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Snapshot' . "\0" . 'version');
     }
 
     /**

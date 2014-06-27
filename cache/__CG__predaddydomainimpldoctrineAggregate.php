@@ -64,10 +64,10 @@ class Aggregate extends \predaddy\domain\impl\doctrine\Aggregate implements \Doc
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'aggregateId', 'type', 'updated', 'version');
+            return array('__isInitialized__', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'aggregateId', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'type', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'updated', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'version');
         }
 
-        return array('__isInitialized__', 'aggregateId', 'type', 'updated', 'version');
+        return array('__isInitialized__', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'aggregateId', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'type', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'updated', '' . "\0" . 'predaddy\\domain\\impl\\doctrine\\Aggregate' . "\0" . 'version');
     }
 
     /**
@@ -176,12 +176,34 @@ class Aggregate extends \predaddy\domain\impl\doctrine\Aggregate implements \Doc
     /**
      * {@inheritDoc}
      */
-    public function touch(\DateTime $timestamp)
+    public function createMetaEvent(\predaddy\domain\DomainEvent $event, $serializedEvent)
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'touch', array($timestamp));
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'createMetaEvent', array($event, $serializedEvent));
 
-        return parent::touch($timestamp);
+        return parent::createMetaEvent($event, $serializedEvent);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createSnapshot($serialized)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'createSnapshot', array($serialized));
+
+        return parent::createSnapshot($serialized);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateSnapshot(\predaddy\domain\impl\doctrine\Snapshot $existing, $serialized)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateSnapshot', array($existing, $serialized));
+
+        return parent::updateSnapshot($existing, $serialized);
     }
 
     /**

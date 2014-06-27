@@ -83,7 +83,7 @@ class IssueController
     public function reassignIssue($aggregateId, Request $request)
     {
         $user = $request->request->get('user');
-        $version = $request->request->get('version');
+        $version = $request->request->get('state_hash');
         $this->commandBus->post(new Reassign($aggregateId, $user, $version));
         return new RedirectResponse('/');
     }

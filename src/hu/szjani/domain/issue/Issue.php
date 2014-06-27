@@ -23,10 +23,8 @@
 
 namespace hu\szjani\domain\issue;
 
-use precore\util\UUID;
 use predaddy\domain\AbstractEventSourcedAggregateRoot;
 use predaddy\domain\AggregateId;
-use predaddy\domain\UUIDAggregateId;
 use predaddy\messagehandling\annotation\Subscribe;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -78,7 +76,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
 
         $this->apply(
             new IssueCreated(
-                new UUIDAggregateId(UUID::randomUUID()),
+                IssueId::create(),
                 $command->getName(),
                 $command->getAssignedUserName(),
                 State::$ASSIGNED->name()
@@ -87,7 +85,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
     }
 
     /**
-     * @return AggregateId
+     * @return IssueId
      */
     public function getId()
     {
@@ -113,7 +111,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
      */
     protected function created(IssueCreated $event)
     {
-        $this->issueId = $event->getAggregateId();
+        $this->issueId = $event->aggregateId();
         $this->name = $event->getName();
         $this->assignedUserName = $event->getAssignedUserName();
         $this->state = State::valueOf($event->getState());

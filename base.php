@@ -3,7 +3,7 @@
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Event\Listeners\MysqlSessionInit;
 use Doctrine\ORM\Tools\Setup;
@@ -11,16 +11,15 @@ use hu\szjani\infrastructure\finders\DbalIssueFinder;
 use hu\szjani\infrastructure\finders\IssueReadModelSynchronizer;
 use hu\szjani\infrastructure\eventstore\ModuloSnapshotter;
 use precore\util\error\ErrorHandler;
-use predaddy\commandhandling\CommandFunctionDescriptorFactory;
-use predaddy\commandhandling\DirectCommandBus;
 use predaddy\domain\AbstractEventSourcedAggregateRoot;
 use predaddy\domain\EventSourcingEventHandlerDescriptorFactory;
+use predaddy\domain\EventSourcingRepository;
 use predaddy\domain\impl\doctrine\DoctrineOrmEventStore;
-use predaddy\domain\impl\LazyEventSourcedRepositoryRepository;
 use predaddy\eventhandling\EventBus;
 use predaddy\eventhandling\EventFunctionDescriptorFactory;
-use predaddy\messagehandling\annotation\AnnotatedMessageHandlerDescriptorFactory;
+use predaddy\messagehandling\interceptors\EventPersister;
 use predaddy\messagehandling\SimpleMessageBusFactory;
+use predaddy\util\TransactionalBuses;
 use trf4php\doctrine\DoctrineTransactionManager;
 use trf4php\doctrine\impl\DefaultEntityManagerFactory;
 use trf4php\doctrine\impl\DefaultEntityManagerProxy;
@@ -55,13 +54,13 @@ $app['serializer'] = $app->share(
 );
 $app['annotation.reader'] = $app->share(
     function () {
-        return new CachedReader(new AnnotationReader(), new ApcCache());
+        return new CachedReader(new AnnotationReader(), new ArrayCache());
     }
 );
 $app['doctrine.config'] = $app->share(
     function () {
         $config = Setup::createAnnotationMetadataConfiguration(
-            array(VENDOR . '/predaddy/predaddy/src/predaddy/domain/impl/doctrine'),
+            [VENDOR . '/predaddy/predaddy/src/predaddy/domain/impl/doctrine'],
             false,
             ROOT . '/cache',
             null,
@@ -73,13 +72,13 @@ $app['doctrine.config'] = $app->share(
 );
 $app['doctrine.connection'] = $app->share(
     function () {
-        return array(
+        return [
             'driver' => 'pdo_mysql',
             'user' => 'predaddy',
             'password' => 'test001',
             'dbname' => 'predaddy',
             'charset' => 'UTF8'
-        );
+        ];
     }
 );
 $app['doctrine.eventmanager'] = $app->share(
@@ -110,36 +109,27 @@ $app['transaction.manager'] = $app->share(
 );
 $app['event.store'] = $app->share(
     function () use ($app) {
-        return new DoctrineOrmEventStore($app['entity.manager'], $app['serializer']);
+        return new DoctrineOrmEventStore($app['entity.manager'], new ModuloSnapshotter(1), $app['serializer']);
+    }
+);
+$app['transactional.buses'] = $app->share(
+    function () use ($app) {
+        return TransactionalBuses::create(
+            $app['transaction.manager'],
+            new EventSourcingRepository($app['event.store']),
+            [],
+            [new EventPersister($app['event.store'])]
+        );
     }
 );
 $app['event.bus'] = $app->share(
     function () use ($app) {
-        return new EventBus(
-            new AnnotatedMessageHandlerDescriptorFactory(
-                new EventFunctionDescriptorFactory(),
-                $app['annotation.reader']
-            ),
-            $app['transaction.manager']
-        );
+        return $app['transactional.buses']->eventBus();
     }
 );
 $app['command.bus'] = $app->share(
     function () use ($app) {
-        $handDesc = new AnnotatedMessageHandlerDescriptorFactory(
-            new CommandFunctionDescriptorFactory(),
-            $app['annotation.reader']
-        );
-        return new DirectCommandBus(
-            $handDesc,
-            $app['transaction.manager'],
-            new LazyEventSourcedRepositoryRepository(
-                $app['event.bus'],
-                $app['event.store'],
-                new ModuloSnapshotter(5)
-            ),
-            new SimpleMessageBusFactory($handDesc)
-        );
+        return $app['transactional.buses']->commandBus();
     }
 );
 $app['dbal.connection'] = $app->share(

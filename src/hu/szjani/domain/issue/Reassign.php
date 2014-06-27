@@ -29,16 +29,16 @@ class Reassign extends AbstractDirectCommand
 {
     private $newUserName;
 
-    public function __construct($aggregateId, $newUserName, $version)
+    public function __construct($aggregateId, $newUserName, $stateHash)
     {
-        parent::__construct($aggregateId, $version);
+        parent::__construct($aggregateId, $stateHash);
         $this->newUserName = $newUserName;
     }
 
     /**
      * @return string
      */
-    public function getAggregateClass()
+    public function aggregateClass()
     {
         return Issue::className();
     }

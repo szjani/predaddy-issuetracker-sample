@@ -23,6 +23,7 @@
 
 namespace hu\szjani\infrastructure\eventstore;
 
+use predaddy\domain\DomainEvent;
 use predaddy\domain\EventSourcedAggregateRoot;
 use predaddy\domain\SnapshotStrategy;
 
@@ -39,11 +40,11 @@ class ModuloSnapshotter implements SnapshotStrategy
     }
 
     /**
-     * @param EventSourcedAggregateRoot $aggregateRoot
+     * @param \predaddy\domain\DomainEvent $event
      * @param int $originalVersion
      * @return boolean
      */
-    public function snapshotRequired(EventSourcedAggregateRoot $aggregateRoot, $originalVersion)
+    public function snapshotRequired(DomainEvent $event, $originalVersion)
     {
         return $originalVersion % $this->divisor == 0;
     }

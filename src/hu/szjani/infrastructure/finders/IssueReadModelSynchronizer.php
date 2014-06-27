@@ -49,22 +49,22 @@ class IssueReadModelSynchronizer
     {
         $this->connection->insert(
             'issue',
-            array(
-                'issue_id' => $event->getAggregateId()->getValue(),
+            [
+                'issue_id' => $event->aggregateId()->value(),
                 'name' => $event->getName(),
                 'user_name' => $event->getAssignedUserName(),
                 'state' => $event->getState(),
-                'last_updated' => $event->getTimestamp(),
-                'version' => $event->getVersion()
-            ),
-            array(
+                'last_updated' => $event->created(),
+                'state_hash' => $event->stateHash()
+            ],
+            [
                 PDO::PARAM_INT,
                 PDO::PARAM_STR,
                 PDO::PARAM_STR,
                 PDO::PARAM_STR,
                 "datetime",
                 PDO::PARAM_INT,
-            )
+            ]
         );
     }
 
@@ -76,19 +76,19 @@ class IssueReadModelSynchronizer
     {
         $this->connection->update(
             'issue',
-            array(
+            [
                 'user_name' => $event->getNewUserName(),
-                'last_updated' => $event->getTimestamp(),
-                'version' => $event->getVersion()
-            ),
-            array(
-                'issue_id' => $event->getAggregateId()->getValue()
-            ),
-            array(
+                'last_updated' => $event->created(),
+                'state_hash' => $event->stateHash()
+            ],
+            [
+                'issue_id' => $event->aggregateId()->value()
+            ],
+            [
                 PDO::PARAM_STR,
                 "datetime",
                 PDO::PARAM_INT
-            )
+            ]
         );
     }
 }

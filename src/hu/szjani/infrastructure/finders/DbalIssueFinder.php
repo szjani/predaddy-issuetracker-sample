@@ -53,7 +53,7 @@ class DbalIssueFinder extends AbstractPageableFinderDbalImpl implements IssueFin
             $row['name'],
             $row['state'],
             $row['user_name'],
-            $row['version']
+            $row['state_hash']
         );
     }
 
