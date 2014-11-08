@@ -23,8 +23,8 @@
 
 namespace hu\szjani\domain\issue;
 
-use predaddy\domain\AbstractEventSourcedAggregateRoot;
-use predaddy\domain\AggregateId;
+use precore\util\Preconditions;
+use predaddy\domain\eventsourcing\AbstractEventSourcedAggregateRoot;
 use predaddy\messagehandling\annotation\Subscribe;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -41,7 +41,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
 {
     /**
      * @Type("predaddy\domain\DefaultAggregateId")
-     * @var AggregateId
+     * @var IssueId
      */
     private $issueId;
 
@@ -69,19 +69,11 @@ class Issue extends AbstractEventSourcedAggregateRoot
      */
     public function __construct(CreateIssue $command)
     {
-        \Assert\lazy()
-            ->that($command->getName(), 'name')->string()->notEmpty()
-            ->that($command->getAssignedUserName(), 'user name')->string()->notEmpty()
-            ->verifyNow();
-
-        $this->apply(
-            new IssueCreated(
-                IssueId::create(),
-                $command->getName(),
-                $command->getAssignedUserName(),
-                State::$ASSIGNED->name()
-            )
-        );
+        $name = $command->getName();
+        $assignedUserName = $command->getAssignedUserName();
+        Preconditions::checkArgument(!empty($name));
+        Preconditions::checkArgument(!empty($assignedUserName));
+        $this->apply(new IssueCreated(IssueId::create(),  $name, $assignedUserName, State::$ASSIGNED->name()));
     }
 
     /**
@@ -98,10 +90,6 @@ class Issue extends AbstractEventSourcedAggregateRoot
      */
     public function reassign(Reassign $command)
     {
-        \Assert\lazy()
-            ->that($command->getNewUserName(), 'user name')->string()->notEmpty()
-            ->that($this->state->equals(State::$CLOSED), 'current state')->false()
-            ->verifyNow();
         $this->apply(new Reassigned($command->getNewUserName()));
     }
 

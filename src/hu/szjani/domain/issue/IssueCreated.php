@@ -56,9 +56,9 @@ class IssueCreated extends AbstractDomainEvent
      */
     private $name;
 
-    public function __construct(AggregateId $aggregateId, $name, $assignedUserName, $state)
+    public function __construct(IssueId $issueId, $name, $assignedUserName, $state)
     {
-        parent::__construct($aggregateId);
+        parent::__construct($issueId);
         $this->name = $name;
         $this->assignedUserName = $assignedUserName;
         $this->state = $state;

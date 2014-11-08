@@ -44,6 +44,9 @@ class Reassigned extends AbstractDomainEvent
      */
     private $newUserName;
 
+    /**
+     * @param string $newUserName
+     */
     public function __construct($newUserName)
     {
         parent::__construct();

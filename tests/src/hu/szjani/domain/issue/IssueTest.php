@@ -24,46 +24,39 @@
 namespace hu\szjani\domain\issue;
 
 use PHPUnit_Framework_TestCase;
+use predaddy\util\test\Fixtures;
 
 class IssueTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function shouldFailWithEmptyName()
     {
-        $command = new CreateIssue("", "John");
-        new Issue($command);
+        Fixtures::newGivenWhenThenFixture(Issue::className())
+            ->when(new CreateIssue("", "John"))
+            ->expectException('\InvalidArgumentException');
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function shouldFailWIthEmptyUserName()
     {
-        $command = new CreateIssue("Issue 01", "");
-        new Issue($command);
+        Fixtures::newGivenWhenThenFixture(Issue::className())
+            ->when(new CreateIssue("Issue 01", ""))
+            ->expectException('\InvalidArgumentException');
     }
 
     /**
      * @test
      */
-    public function createIssue()
+    public function shouldCreateIssue()
     {
         $name = "Issue 01";
         $assignedUserName = "John";
-        $command = new CreateIssue($name, $assignedUserName);
-        $issue = new Issue($command);
-        $events = $issue->getAndClearRaisedEvents();
-        self::assertEquals(1, count($events));
-        $event = $events[0];
-        self::assertInstanceOf(IssueCreated::className(), $event);
-        /* @var $event IssueCreated */
-        self::assertEquals($name, $event->getName());
-        self::assertEquals($assignedUserName, $event->getAssignedUserName());
-        self::assertEquals(1, $event->getVersion());
-        self::assertEquals(State::$ASSIGNED->name(), $event->getState());
+        Fixtures::newGivenWhenThenFixture(Issue::className())
+            ->when(new CreateIssue($name, $assignedUserName))
+            ->expectEvents(new IssueCreated(IssueId::create(), $name, $assignedUserName, State::$ASSIGNED->name()));
     }
 }
