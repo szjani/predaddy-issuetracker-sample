@@ -11,15 +11,13 @@ use hu\szjani\infrastructure\finders\DbalIssueFinder;
 use hu\szjani\infrastructure\finders\IssueReadModelSynchronizer;
 use hu\szjani\infrastructure\eventstore\ModuloSnapshotter;
 use precore\util\error\ErrorHandler;
-use predaddy\domain\AbstractEventSourcedAggregateRoot;
-use predaddy\domain\EventSourcingEventHandlerDescriptorFactory;
-use predaddy\domain\EventSourcingRepository;
+use predaddy\domain\DomainEvent;
+use predaddy\domain\eventsourcing\EventSourcingRepository;
 use predaddy\domain\impl\doctrine\DoctrineOrmEventStore;
 use predaddy\eventhandling\EventBus;
-use predaddy\eventhandling\EventFunctionDescriptorFactory;
+use predaddy\messagehandling\annotation\AnnotatedMessageHandlerDescriptor;
 use predaddy\messagehandling\interceptors\EventPersister;
-use predaddy\messagehandling\SimpleMessageBusFactory;
-use predaddy\util\TransactionalBuses;
+use predaddy\util\TransactionalBusesBuilder;
 use trf4php\doctrine\DoctrineTransactionManager;
 use trf4php\doctrine\impl\DefaultEntityManagerFactory;
 use trf4php\doctrine\impl\DefaultEntityManagerProxy;
@@ -114,12 +112,10 @@ $app['event.store'] = $app->share(
 );
 $app['transactional.buses'] = $app->share(
     function () use ($app) {
-        return TransactionalBuses::create(
-            $app['transaction.manager'],
-            new EventSourcingRepository($app['event.store']),
-            [],
-            [new EventPersister($app['event.store'])]
-        );
+        return TransactionalBusesBuilder::create($app['transaction.manager'])
+            ->interceptEventsWithinTransaction([new EventPersister($app['event.store'])])
+            ->withRepository(new EventSourcingRepository($app['event.store']))
+            ->build();
     }
 );
 $app['event.bus'] = $app->share(
@@ -146,18 +142,19 @@ $app['issue.finder'] = $app->share(
         return new DbalIssueFinder($app['dbal.connection']);
     }
 );
-
-AbstractEventSourcedAggregateRoot::setInnerMessageBusFactory(
-    new SimpleMessageBusFactory(
-        new EventSourcingEventHandlerDescriptorFactory(
-            new EventFunctionDescriptorFactory(),
-            $app['annotation.reader']
-        )
-    )
+$app['issue.readmodel.synchronizer'] = $app->share(
+    function () use ($app) {
+        return new IssueReadModelSynchronizer($app['dbal.connection']);
+    }
 );
+
+AnnotatedMessageHandlerDescriptor::setReader($app['annotation.reader']);
 
 /* @var $eventBus EventBus */
 $eventBus = $app['event.bus'];
-$eventBus->register(new IssueReadModelSynchronizer($app['dbal.connection']));
-
+$eventBus->registerHandlerFactory(
+    function (DomainEvent $anyEvent) use ($app) {
+        return $app['issue.readmodel.synchronizer'];
+    }
+);
 return $app;

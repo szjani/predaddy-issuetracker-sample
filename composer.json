@@ -16,13 +16,13 @@
         "php": ">=5.4",
         "silex/silex": "v1.1.2",
         "predaddy/predaddy": "3.0.*@dev",
-        "precore/precore": "~1.4",
+        "predaddy/predaddy-doctrine-orm": "dev-master",
+        "precore/precore": "~1.8",
         "lf4php/lf4php": "~4.0",
         "trf4php/trf4php-doctrine": "~1.2",
         "lf4php/lf4php-log4php": "~2.0",
         "jms/serializer": "~0.15",
         "doctrine/dbal": "~2.4",
-        "beberlei/assert": "~2.0",
         "twig/twig": "~1.8"
     },
     "require-dev": {
@@ -30,8 +30,5 @@
     },
     "autoload": {
         "psr-0": {"hu": "src/"}
-    },
-    "config": {
-        "bin-dir": "bin"
     }
 }

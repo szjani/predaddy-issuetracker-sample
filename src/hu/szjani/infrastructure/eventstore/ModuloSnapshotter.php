@@ -24,8 +24,7 @@
 namespace hu\szjani\infrastructure\eventstore;
 
 use predaddy\domain\DomainEvent;
-use predaddy\domain\EventSourcedAggregateRoot;
-use predaddy\domain\SnapshotStrategy;
+use predaddy\domain\eventsourcing\SnapshotStrategy;
 
 class ModuloSnapshotter implements SnapshotStrategy
 {
