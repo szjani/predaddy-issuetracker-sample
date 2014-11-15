@@ -23,9 +23,10 @@
 
 namespace hu\szjani\domain\issue;
 
-use predaddy\commandhandling\AbstractDirectCommand;
+use predaddy\commandhandling\AbstractCommand;
+use predaddy\commandhandling\DirectCommand;
 
-class CreateIssue extends AbstractDirectCommand
+class CreateIssue extends AbstractCommand implements DirectCommand
 {
     private $name;
     private $assignedUserName;

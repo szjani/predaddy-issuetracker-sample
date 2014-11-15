@@ -23,15 +23,21 @@
 
 namespace hu\szjani\domain\issue;
 
-use predaddy\commandhandling\AbstractDirectCommand;
+use predaddy\commandhandling\AbstractCommand;
+use predaddy\commandhandling\DirectCommand;
+use predaddy\domain\StateHashAware;
+use predaddy\domain\StateHashTrait;
 
-class Reassign extends AbstractDirectCommand
+class Reassign extends AbstractCommand implements DirectCommand, StateHashAware
 {
+    use StateHashTrait;
+
     private $newUserName;
 
     public function __construct($issueId, $newUserName, $stateHash)
     {
-        parent::__construct($issueId, $stateHash);
+        parent::__construct($issueId);
+        $this->stateHash = $stateHash;
         $this->newUserName = $newUserName;
     }
 
