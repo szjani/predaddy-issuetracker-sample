@@ -24,7 +24,9 @@
 namespace hu\szjani\domain\issue;
 
 use precore\util\Preconditions;
+use predaddy\domain\AggregateId;
 use predaddy\domain\eventsourcing\AbstractEventSourcedAggregateRoot;
+use predaddy\domain\GenericAggregateId;
 use predaddy\messagehandling\annotation\Subscribe;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -40,8 +42,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 class Issue extends AbstractEventSourcedAggregateRoot
 {
     /**
-     * @Type("predaddy\domain\DefaultAggregateId")
-     * @var IssueId
+     * @Type("predaddy\domain\GenericAggregateId")
+     * @var GenericAggregateId
      */
     private $issueId;
 
@@ -77,7 +79,7 @@ class Issue extends AbstractEventSourcedAggregateRoot
     }
 
     /**
-     * @return IssueId
+     * @return AggregateId
      */
     public function getId()
     {
