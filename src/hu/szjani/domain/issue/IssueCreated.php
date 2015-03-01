@@ -24,9 +24,9 @@
 namespace hu\szjani\domain\issue;
 
 use predaddy\domain\AbstractDomainEvent;
-use predaddy\domain\AggregateId;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use predaddy\messagehandling\NonBlockable;
 
 /**
  * Class IssueCreated
@@ -36,7 +36,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  * @author Szurovecz János <szjani@szjani.hu>
  * @ExclusionPolicy("none")
  */
-class IssueCreated extends AbstractDomainEvent
+class IssueCreated extends AbstractDomainEvent implements NonBlockable
 {
     /**
      * @Type("string")
